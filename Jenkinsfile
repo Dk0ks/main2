@@ -19,7 +19,7 @@ pipeline {
         stage('Deploy') {
             steps {
                  withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                   sh "ansible-playbook playbook.yaml -u ansible --private-key=ANSIBLE_PRIVATE_KEY -e username=$user -e password=$pass -e BUILD_ID=$BUILD_ID --become -i inventory"
+                   sh "ansible-playbook playbook.yaml -u jenkins --private-key=ANSIBLE_PRIVATE_KEY -e username=$user -e password=$pass -e BUILD_ID=$BUILD_ID --become -i inventory"
                 }
             }
         }
