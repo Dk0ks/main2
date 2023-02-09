@@ -1,0 +1,35 @@
+- name: install docker and start service
+  hosts: servers
+  tasks:
+  - name: install packages (yum utils)
+    yum:
+      name: yum-utils
+      state: present
+  - name: add docker engine repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker.repo
+      mode: 0644
+  - name: download docker engine
+    yum:
+      name: docker-ce
+      state: present
+  - name: start and enable docker service
+    service:
+      name: docker
+      enabled: yes
+      state: started
+  - name: install pip packages
+    pip:
+      name: docker
+      state: present
+  - name: docker login
+    docker_login:
+      username: " {{ user }} "
+      password: "{{ password }}"
+  - name: download image and start container
+    docker_container:
+      name: exam{{ BUILD_ID }}
+      image: dk0ks/main:v{{ BUILD_ID }}
+      ports:
+        - "808{{ BUILD_ID }}:8081"
